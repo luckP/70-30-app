@@ -7,6 +7,18 @@ This document outlines the high-level roadmap for the development of the **70-30
 - Client initialized in `client/` (React + Vite).
 - Docker environment configured `docker-compose.yml`.
 
+## Definition of Done (DoD)
+All tasks and features implemented in this project must adhere to the following quality standards before being considered complete:
+1.  **Documentation**:
+    - Code must be commented where complex.
+    - **API Endpoints**: Must be fully documented in Swagger/OpenAPI.
+    - **Features**: Must be described in the relevant Sprint documentation.
+2.  **Testing**:
+    - **Backend**: Unit tests (Pytest/Django Test) must be created for models, views, and serializers.
+    - **Frontend**: Basic component rendering tests (Vitest/Jest) where applicable.
+3.  **review**: All code must follow the project's style guide and pass linting checks.
+
+
 ## Roadmap Overview
 
 | Sprint | Dates | Focus Area | Key Deliverables |
