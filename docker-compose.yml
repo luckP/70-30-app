@@ -24,6 +24,27 @@ services:
       - SQL_PORT=5432
       - REDIS_URL=redis://grandpa-redis:6379/1
 
+  grandpa-tests:
+    container_name: 70-30-grandpa-tests
+    build: ./backend
+    command: pytest
+    volumes:
+      - ./backend:/app
+    depends_on:
+      - grandpa-db
+      - grandpa-redis
+    environment:
+      - DEBUG=1
+      - SECRET_KEY=changesecurekeyinproduction
+      - DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1
+      - SQL_ENGINE=django.contrib.gis.db.backends.postgis
+      - SQL_DATABASE=7030db
+      - SQL_USER=7030user
+      - SQL_PASSWORD=7030password
+      - SQL_HOST=grandpa-db
+      - SQL_PORT=5432
+      - REDIS_URL=redis://grandpa-redis:6379/1
+
   grandpa-client:
     container_name: 70-30-grandpa-client
     build: ./client

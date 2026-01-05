@@ -26,7 +26,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django.contrib.gis',  # GeoDjango
+    # 'django.contrib.gis',  # GeoDjango (Added conditionally below)
 
     # Third-party apps
     'rest_framework',
@@ -36,6 +36,10 @@ INSTALLED_APPS = [
     # Local apps
     'users',
 ]
+
+# Conditionally add GeoDjango if using PostGIS
+if os.environ.get('SQL_ENGINE') == 'django.contrib.gis.db.backends.postgis':
+    INSTALLED_APPS.insert(6, 'django.contrib.gis')
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -158,5 +162,8 @@ SWAGGER_SETTINGS = {
             'name': 'Authorization',
             'in': 'header'
         }
-    }
+    },
+    'USE_SESSION_AUTH': False,
+    'JSON_EDITOR': True,
 }
+SWAGGER_USE_COMPAT_RENDERERS = False
