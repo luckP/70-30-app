@@ -41,6 +41,13 @@ INSTALLED_APPS = [
 if os.environ.get('SQL_ENGINE') == 'django.contrib.gis.db.backends.postgis':
     INSTALLED_APPS.insert(6, 'django.contrib.gis')
 
+# Attempt to locate GDAL library on macOS (Homebrew) for local development
+GDAL_LIBRARY_PATH = os.environ.get('GDAL_LIBRARY_PATH')
+if not GDAL_LIBRARY_PATH and os.name == 'posix':
+    gdal_path = Path('/opt/homebrew/lib/libgdal.dylib')
+    if gdal_path.exists():
+        GDAL_LIBRARY_PATH = str(gdal_path)
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -134,6 +141,9 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field

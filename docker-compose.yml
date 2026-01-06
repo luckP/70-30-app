@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   grandpa-backend:
     container_name: 70-30-grandpa-backend

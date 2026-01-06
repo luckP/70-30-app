@@ -2,32 +2,19 @@ from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from django.contrib.auth import get_user_model
 from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework.serializers import ModelSerializer, Serializer, CharField
 from drf_yasg.utils import swagger_auto_schema
-
 from rest_framework_simplejwt.exceptions import TokenError
+
+from .serializers import (
+    UserSerializer, 
+    LogoutSerializer, 
+    ProfileSerializer, 
+    LocationUpdateSerializer
+)
+from .models import Profile
 
 User = get_user_model()
 
-class UserSerializer(ModelSerializer):
-    class Meta:
-        model = User
-        fields = ('id', 'username', 'email', 'password', 'user_type', 'first_name', 'last_name')
-        extra_kwargs = {
-            'password': {'write_only': True},
-            'email': {'required': True}
-        }
-
-    def create(self, validated_data):
-        user = User.objects.create_user(
-            username=validated_data['username'],
-            email=validated_data['email'],
-            password=validated_data['password'],
-            user_type=validated_data.get('user_type', User.UserType.MENTEE),
-            first_name=validated_data.get('first_name', ''),
-            last_name=validated_data.get('last_name', ''),
-        )
-        return user
 
 class RegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
@@ -45,8 +32,6 @@ class RegisterView(generics.CreateAPIView):
     def post(self, request, *args, **kwargs):
         return super().post(request, *args, **kwargs)
 
-class LogoutSerializer(Serializer):
-    refresh = CharField(help_text="The refresh token to blacklist")
 
 class LogoutView(generics.GenericAPIView):
     permission_classes = (permissions.IsAuthenticated,)
@@ -73,3 +58,54 @@ class LogoutView(generics.GenericAPIView):
             return Response({"error": "Invalid refresh token"}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
              return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class UserProfileView(generics.RetrieveUpdateAPIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    serializer_class = ProfileSerializer
+
+    def get_queryset(self):
+        return Profile.objects.filter(user=self.request.user)  # pylint: disable=no-member
+
+    def get_object(self):
+        # Ensure profile exists (it should due to signals, but safety check)
+        # Note: We haven't implemented the signal yet, so we might need get_or_create here
+        # strictly for robustness if the signal isn't there.
+        # But standard pattern is just get_object returning the instance.
+        # If we use get_object_or_404 on the queryset filtered by user, it should work.
+        obj, created = Profile.objects.get_or_create(user=self.request.user)  # pylint: disable=no-member
+        return obj
+
+    @swagger_auto_schema(
+        tags=['Profile'],
+        operation_description="Retrieve or update the authenticated user's profile.",
+        responses={200: ProfileSerializer}
+    )
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
+
+    @swagger_auto_schema(
+        tags=['Profile'],
+        operation_description="Update profile fields (bio, avatar, experience, location).",
+        responses={200: ProfileSerializer}
+    )
+    def patch(self, request, *args, **kwargs):
+        return super().patch(request, *args, **kwargs)
+
+
+class LocationUpdateView(generics.UpdateAPIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    serializer_class = LocationUpdateSerializer
+    http_method_names = ['patch']
+
+    def get_object(self):
+        obj, created = Profile.objects.get_or_create(user=self.request.user)  # pylint: disable=no-member
+        return obj
+
+    @swagger_auto_schema(
+        tags=['Profile'],
+        operation_description="Update the user's geographical location using latitude and longitude.",
+        responses={200: LocationUpdateSerializer}
+    )
+    def patch(self, request, *args, **kwargs):
+        return super().patch(request, *args, **kwargs)
