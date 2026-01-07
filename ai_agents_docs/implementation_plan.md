@@ -25,7 +25,7 @@ All tasks and features implemented in this project must adhere to the following 
 | :--- | :--- | :--- | :--- |
 | **Sprint 1** | Jan 05 - Jan 11 | **Foundation & Auth** | Docker Setup, Backend Auth (JWT, User Types: Mentor/Mentee/Admin), Frontend Login/Register UI. |
 | **Sprint 2** | Jan 12 - Jan 18 | **Profiles & Location** | Profile CRUD, User Location (PostGIS), Frontend Dashboard & Profile Mgmt. |
-| **Sprint 3** | Jan 19 - Jan 25 | **Skills & Discovery** | Skill Taxonomy, Discovery APIs, Map-based Mentor Search (Frontend). |
+| **Sprint 3** | Jan 19 - Jan 25 | **Core Arch & Skills** | **Core App** (Shared Utils), Skill Taxonomy, Discovery APIs, Map-based Mentor Search. |
 | **Sprint 4** | Jan 26 - Feb 01 | **Booking & Connections** | Booking Request Flow, Calendar Integration, Scheduling UI. |
 | **Sprint 5** | Feb 02 - Feb 08 | **Trust & Social** | Reviews/Ratings System, Admin Moderation Tools, Social UI Components. |
 | **Sprint 6** | Feb 09 - Feb 15 | **Polish & Launch Prep** | Performance Tuning (Redis), E2E Testing, CI/CD Scripts, Final Documentation. |
@@ -34,33 +34,37 @@ All tasks and features implemented in this project must adhere to the following 
 
 ## Detailed Sprint Breakdown
 
-### Sprint 1: Foundation & Infrastructure (Current)
+### Sprint 1: Foundation & Infrastructure
 **Goal**: Operational Stack with authenticated Frontend & Backend.
 - **Backend (`grandpa-backend`)**:
-  - Dockerize Django + PostGIS + Redis.
-  - Implement Custom User Model with Types: `MENTOR`, `MENTEE`, `ADMIN`.
-  - Auth Endpoints: Register, Login, Logout (JWT).
-  - Swagger Documentation.
+  - [x] Dockerize Django + PostGIS + Redis.
+  - [x] Implement Custom User Model with Types: `MENTOR`, `MENTEE`, `ADMIN`.
+  - [x] Auth Endpoints: Register, Login, Logout (JWT).
+  - [x] Swagger Documentation.
 - **Frontend (`grandpa-client`)**:
-  - Initialize Vite + React project.
-  - Dockerize Frontend.
-  - Setup React Router & Axios/Query.
-  - Create Login & Registration Forms.
+  - [x] Initialize Vite + React project.
+  - [x] Dockerize Frontend.
+  - [x] Setup React Router & Axios/Query.
+  - [x] Create Login & Registration Forms.
 
 ### Sprint 2: User Profiles & Geography
 **Goal**: Define "Who" and "Where".
 - **Backend**:
-  - `Profile` model (1-to-1 with User).
-  - `Location` handling with GeoDjango (PointField).
-  - API: Get/Update Profile, Update Location.
+  - [x] `Profile` model (1-to-1 with User).
+  - [ ] `Location` handling with GeoDjango (PointField).
+  - [x] API: Get/Update Profile, Update Location.
 - **Frontend**:
-  - User Dashboard (Private Route).
-  - Profile Edit Page (Upload Avatar, Bio).
-  - Integration with Maps (e.g., Leaflet) to set "My Location".
+  - [ ] User Dashboard (Private Route).
+  - [ ] Profile Edit Page (Upload Avatar, Bio).
+  - [ ] Integration with Maps (e.g., Leaflet) to set "My Location".
 
-### Sprint 3: Skills & Discovery Engine
-**Goal**: Connect Demand with Supply.
-- **Backend**:
+### Sprint 3: Core Architecture & Skills Engine (Current)
+**Goal**: Establish shared foundations and Connect Demand with Supply.
+- **Backend - Core App**:
+  - Centralized Error Handling (Exceptions).
+  - Base Models/Mixins (TimeStampedModel).
+  - Shared Utilities (Response formatters).
+- **Backend - Skills App**:
   - `Skill` and `UserSkill` models.
   - Discovery API: Filter by Skill, Radius (Distance), and Availability.
   - Admin API: Manage Skill Categories.
