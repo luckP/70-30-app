@@ -22,6 +22,7 @@ urlpatterns = [
     
     # Auth Endpoints
     path('api/auth/', include('users.urls')),
+    path('api/skills/', include('skills.urls')),
 
     # Swagger Documentation
     re_path(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),

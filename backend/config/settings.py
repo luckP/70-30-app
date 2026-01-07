@@ -35,6 +35,8 @@ INSTALLED_APPS = [
 
     # Local apps
     'users',
+    'core',
+    'skills',
 ]
 
 # Conditionally add GeoDjango if using PostGIS
@@ -162,6 +164,7 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
     ),
+    'EXCEPTION_HANDLER': 'core.exceptions.core_exception_handler',
 }
 
 # Swagger Settings
